@@ -1,5 +1,5 @@
 FROM centos:7
-MAINTAINER mohanraz@gmail.com
+MAINTAINER snehalshinde2112@gmail.com
 RUN yum -y update
 RUN yum -y install httpd php php-gd php-mysql
 ADD code /var/www/html/
