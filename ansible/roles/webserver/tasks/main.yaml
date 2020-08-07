@@ -1,0 +1,21 @@
+---
+- name: install the latest version of Apache
+  yum:
+    name: "{{ pkgname }}"
+    state: latest
+  register: pkgoutput
+- debug:
+    var: pkgoutput
+- name: Template a file to /etc/files.conf
+  template:
+    src: index.j2
+    dest: /var/www/html/index.html
+  when: pkgoutput.rc == 0
+- name: Start service httpd, if not started
+  service:
+    name: "{{ pkgname }}"
+    state: started
+    enabled: yes
+  register: svcout
+- debug:
+    var: svcout

@@ -1,0 +1,31 @@
+- hosts: localhost
+  tasks:
+  - name: Create Key pair in AWS
+    ec2_key:
+      name: my_keypair
+      key_material: "{{ lookup('file', '/home/ec2-user/environment/testkey.pub') }}"
+  - name: example ec2 group
+    ec2_group:
+      name: websg
+      description: an example EC2 group
+      vpc_id: vpc-0c23024c66def4388
+      region: us-east-1
+      rules:
+        - proto: tcp
+          from_port: 80   
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+  - ec2:
+      region: us-east-1
+      key_name: my_keypair
+      instance_type: t2.micro
+      image: ami-02354e95b39ca8dec
+      wait: yes
+      group: websg
+      count: 2
+      vpc_subnet_id: subnet-045d889c09c196fe4
+      assign_public_ip: yes
